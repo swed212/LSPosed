@@ -15,11 +15,6 @@
     private int refreshFd(boolean);
 }
 
--keep class org.lsposed.lspd.service.LSPManagerService {*;}
--keep class org.lsposed.lspd.service.ServiceManager {*;}
--keep class org.lsposed.lspd.ILSPManagerService {*;}
--keep class org.lsposed.lspd.models.Application {*;}
-
 -keepclassmembers class ** implements android.content.ContextWrapper {
     public int getUserId();
     public android.os.UserHandle getUser();

@@ -63,9 +63,9 @@ android {
             }
         }
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles("proguard-rules.pro")
+            isMinifyEnabled = false
+            isShrinkResources = false
+//            proguardFiles("proguard-rules.pro")
         }
     }
 
