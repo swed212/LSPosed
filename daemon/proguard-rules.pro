@@ -16,6 +16,7 @@
 }
 
 -keep class org.lsposed.lspd.service.LSPManagerService {*;}
+-keep class org.lsposed.lspd.service.ServiceManager {*;}
 -keep class org.lsposed.lspd.ILSPManagerService {*;}
 -keep class org.lsposed.lspd.models.Application {*;}
 
