@@ -23,6 +23,9 @@ jobs:
       CCACHE_BASEDIR: "${{ github.workspace }}"
 
     steps:
+      - name: Remove artifacts
+        uses: c-hive/gha-remove-artifacts@v1.2.0
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
