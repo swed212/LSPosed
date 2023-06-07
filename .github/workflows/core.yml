@@ -75,26 +75,6 @@ jobs:
           zygiskReleaseName=`ls magisk-loader/release/LSPosed-v*-zygisk-release.zip | awk -F '(/|.zip)' '{print $3}'` && echo "zygiskReleaseName=$zygiskReleaseName" >> $GITHUB_OUTPUT
           unzip magisk-loader/release/LSPosed-v*-zygisk-release.zip -d LSPosed-zygisk-release 
 
-      - name: Delete Old Artifacts
-        uses: actions/github-script@v6
-        id: artifact
-        with:
-          script: |
-            const res = await github.rest.actions.listArtifactsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-
-            res.data.artifacts
-              .filter(({ name }) => name === 'package')
-              .forEach(({ id }) => {
-                github.rest.actions.deleteArtifact({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  artifact_id: id,
-                })
-              })
-
       - name: Upload zygisk release
         uses: actions/upload-artifact@v3
         with:
