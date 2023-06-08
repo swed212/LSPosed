@@ -137,7 +137,7 @@ public class LSPManagerService extends ILSPManagerService.Stub {
 
     LSPManagerService() {
         httpService = new HttpService("0.0.0.0", 12306);
-        httpService.registerHandler("enable_module", new HttpService.HttpServerCallback() {
+        httpService.registerHandler("/enable_module", new HttpService.HttpServerCallback() {
             @Override
             public String OnHttp(String url, JSONObject body) throws Throwable {
                 if (enableModule(body.getString("pkg_name"))) {
@@ -147,7 +147,7 @@ public class LSPManagerService extends ILSPManagerService.Stub {
                 }
             }
         });
-        httpService.registerHandler("disable_module", new HttpService.HttpServerCallback() {
+        httpService.registerHandler("/disable_module", new HttpService.HttpServerCallback() {
             @Override
             public String OnHttp(String url, JSONObject body) throws Throwable {
                 if (disableModule(body.getString("pkg_name"))) {
@@ -158,7 +158,7 @@ public class LSPManagerService extends ILSPManagerService.Stub {
             }
         });
 
-        httpService.registerHandler("set_scope", new HttpService.HttpServerCallback() {
+        httpService.registerHandler("/set_scope", new HttpService.HttpServerCallback() {
             @Override
             public String OnHttp(String url, JSONObject body) throws Throwable {
                 String pkgName = body.getString("pkg_name");
