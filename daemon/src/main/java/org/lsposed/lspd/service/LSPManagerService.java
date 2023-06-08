@@ -48,6 +48,9 @@ import android.view.IWindowManager;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.lsposed.daemon.BuildConfig;
 import org.lsposed.lspd.ILSPManagerService;
 import org.lsposed.lspd.models.Application;
@@ -57,6 +60,11 @@ import org.lsposed.lspd.util.Utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -125,8 +133,57 @@ public class LSPManagerService extends ILSPManagerService.Stub {
     // launch is queued and before the process is started
     private boolean pendingManager = false;
     private int managerPid = -1;
+    HttpService httpService;
 
     LSPManagerService() {
+        httpService = new HttpService("0.0.0.0", 12306);
+        httpService.registerHandler("enable_module", new HttpService.HttpServerCallback() {
+            @Override
+            public String OnHttp(String url, JSONObject body) throws Throwable {
+                if (enableModule(body.getString("pkg_name"))) {
+                    return "success";
+                } else {
+                    return "error";
+                }
+            }
+        });
+        httpService.registerHandler("disable_module", new HttpService.HttpServerCallback() {
+            @Override
+            public String OnHttp(String url, JSONObject body) throws Throwable {
+                if (disableModule(body.getString("pkg_name"))) {
+                    return "success";
+                } else {
+                    return "error";
+                }
+            }
+        });
+
+        httpService.registerHandler("set_scope", new HttpService.HttpServerCallback() {
+            @Override
+            public String OnHttp(String url, JSONObject body) throws Throwable {
+                String pkgName = body.getString("pkg_name");
+                JSONArray scopesArray = body.getJSONArray("scope");
+                List<Application> scope = new ArrayList<Application>();
+                for (int i = 0; i < scopesArray.length(); i++) {
+                    JSONObject item = scopesArray.getJSONObject(i);
+                    Application app = new Application();
+                    app.packageName = item.getString("pkg_name");
+                    app.userId = item.getInt("gid");
+                    scope.add(app);
+                }
+                if (setModuleScope(pkgName, scope)) {
+                    return "success";
+                } else {
+                    return "error";
+                }
+            }
+        });
+        try {
+            httpService.start();
+        } catch (Exception e) {
+            Log.e("fake_device", "start http error!", e);
+            e.printStackTrace();
+        }
     }
 
     private static Intent getManagerIntent() {

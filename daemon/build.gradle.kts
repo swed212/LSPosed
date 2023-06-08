@@ -125,6 +125,7 @@ dependencies {
     implementation(projects.hiddenapi.bridge)
     implementation(projects.services.daemonService)
     implementation(projects.services.managerService)
+    implementation("org.nanohttpd:nanohttpd:2.3.1")
     compileOnly(libs.androidx.annotation)
     compileOnly(projects.hiddenapi.stubs)
 }
